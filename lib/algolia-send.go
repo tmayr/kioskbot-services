@@ -9,7 +9,7 @@ import (
 
 func SendProductsToAlgolia(items []KioskTypes.Item) {
 	client := algoliasearch.NewClient(os.Getenv("ALGOLIA_ID"), os.Getenv("ALGOLIA_KEY"))
-	index := client.InitIndex("products_from_DAT_GO")
+	index := client.InitIndex(os.Getenv("ALGOLIA_PRODUCTS_INDEX"))
 
 	var algoliaObjects []algoliasearch.Object
 	var algoliaSynonyms []algoliasearch.Synonym
