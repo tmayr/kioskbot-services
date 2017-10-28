@@ -1,7 +1,8 @@
 package main
 
 import (
-	"kioskbot-services/routes"
+	KioskbotLib "kioskbot-services/lib"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/joho/godotenv"
@@ -14,8 +15,11 @@ func main() {
 	router.Use(gin.Logger())
 	router.Use(gin.Recovery())
 
-	// Routes
-	routes.Initialize(router)
+	router.GET("/", func(c *gin.Context) {
+		kioskitems := KioskbotLib.FetchProductsFromMongo()
+		KioskbotLib.SendProductsToAlgolia(kioskitems)
+		c.JSON(http.StatusOK, kioskitems)
+	})
 
 	router.Run()
 }
