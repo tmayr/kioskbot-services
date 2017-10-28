@@ -1,0 +1,5 @@
+vendor/**/
+gin-bin
+.env
+.DS_Store
+docker-compose.yml
