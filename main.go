@@ -35,18 +35,24 @@ func main() {
 	// Middlewares
 	router.Use(gin.Logger())
 	router.Use(gin.Recovery())
-	router.Use(KioskbotAuth())
 
-	router.GET("/api/v1/update-algolia", func(c *gin.Context) {
-		kioskitems := KioskbotLib.FetchProductsFromMongo()
-		KioskbotLib.SendProductsToAlgolia(kioskitems)
-		c.JSON(http.StatusOK, kioskitems)
-	})
+	v1 := router.Group("/api/v1")
+	{
+		v1.Use(KioskbotAuth())
+		v1.GET("/update-algolia", func(c *gin.Context) {
+			kioskitems := KioskbotLib.FetchProductsFromMongo()
+			KioskbotLib.SendProductsToAlgolia(kioskitems)
+			c.JSON(http.StatusOK, kioskitems)
+		})
+
+		v1.GET("/", func(c *gin.Context) {
+			endpoints := []string{"/api/v1/update-algolia"}
+			c.JSON(200, map[string]interface{}{"endpoints": endpoints})
+		})
+	}
 
 	router.GET("/", func(c *gin.Context) {
-		endpoints := []string{"/api/v1/update-algolia"}
-		c.JSON(200, map[string]interface{}{"endpoints": endpoints})
+		c.String(200, "Nothing to see here.")
 	})
-
 	router.Run()
 }
