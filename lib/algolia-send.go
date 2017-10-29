@@ -17,9 +17,11 @@ func SendProductsToAlgolia(items []KioskTypes.Item) {
 	for _, v := range items {
 		slug := v.Slug
 		item := v.Item
+		ID := v.ID
 		synonyms := v.Synonyms
 
 		algoliaObjects = append(algoliaObjects, algoliasearch.Object{
+			"_id":      ID,
 			"item":     item,
 			"slug":     slug,
 			"objectID": slug,
