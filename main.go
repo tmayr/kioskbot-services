@@ -37,7 +37,7 @@ func main() {
 	router.Use(gin.Recovery())
 	router.Use(KioskbotAuth())
 
-	router.GET("/", func(c *gin.Context) {
+	router.GET("/api/v1/update-algolia", func(c *gin.Context) {
 		kioskitems := KioskbotLib.FetchProductsFromMongo()
 		KioskbotLib.SendProductsToAlgolia(kioskitems)
 		c.JSON(http.StatusOK, kioskitems)
