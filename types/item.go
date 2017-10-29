@@ -1,8 +1,16 @@
 package types
 
+import (
+	"time"
+
+	"gopkg.in/mgo.v2/bson"
+)
+
 type Item struct {
-	Item      string   `json:"item"`
-	Slug      string   `json:"slug"`
-	Synonyms  []string `json:"synonyms"`
-	CreatedAt string   `json:"createdAt"`
+	ID          bson.ObjectId `bson:"_id"`
+	Item        string        `bson:"item"`
+	Slug        string        `bson:"slug"`
+	StockActual int           `bson:"stockActual"`
+	Synonyms    []string      `bson:"synonyms"`
+	CreatedAt   time.Time     `bson:"createdAt"`
 }
