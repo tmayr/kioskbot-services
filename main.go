@@ -11,7 +11,7 @@ import (
 
 func KioskbotAuth() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		apiKey, keyExists := os.LookupEnv("KIOSKBOT_API_KEY")
+		apiKey, keyExists := os.LookupEnv("KB_SERVICES_API_KEY")
 
 		if !keyExists {
 			c.JSON(500, map[string]string{"error": "API_KEY not set in Application"})
@@ -19,7 +19,7 @@ func KioskbotAuth() gin.HandlerFunc {
 			return
 		}
 
-		if c.DefaultQuery("apiKey", "") != apiKey {
+		if c.GetHeader("X-KB-SERVICES-API-KEY") != apiKey {
 			c.JSON(401, map[string]string{"error": "not authorized"})
 			c.Abort()
 			return
@@ -41,6 +41,11 @@ func main() {
 		kioskitems := KioskbotLib.FetchProductsFromMongo()
 		KioskbotLib.SendProductsToAlgolia(kioskitems)
 		c.JSON(http.StatusOK, kioskitems)
+	})
+
+	router.GET("/", func(c *gin.Context) {
+		endpoints := []string{"/api/v1/update-algolia"}
+		c.JSON(200, map[string]interface{}{"endpoints": endpoints})
 	})
 
 	router.Run()
