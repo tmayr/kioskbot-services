@@ -2,6 +2,7 @@ package lib
 
 import (
 	KioskTypes "kioskbot-services/types"
+	"log"
 	"os"
 
 	"github.com/algolia/algoliasearch-client-go/algoliasearch"
@@ -39,6 +40,15 @@ func SendProductsToAlgolia(items []KioskTypes.Item) {
 		}
 	}
 
-	index.AddObjects(algoliaObjects)
-	index.BatchSynonyms(algoliaSynonyms, true, true)
+	_, err := index.AddObjects(algoliaObjects)
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+
+	_, err = index.BatchSynonyms(algoliaSynonyms, true, true)
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
 }
