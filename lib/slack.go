@@ -22,14 +22,14 @@ func Notify(wire KioskTypes.BankWire) {
 		),
 		MarkdownIn: []string{"text", "pretext"},
 		Color:      "#3AA3E3",
-		// CallbackID: "wire_user_selection?amount=xxxx",
-		// Actions: []slack.AttachmentAction{
-		// 	slack.AttachmentAction{
-		// 		Name:       "Users",
-		// 		Type:       "select",
-		// 		DataSource: "users",
-		// 	},
-		// },
+		CallbackID: "wire_user_selection?amount=" + wire.Amount + "&apiKey=" + os.Getenv("KB_SERVICES_API_KEY"),
+		Actions: []slack.AttachmentAction{
+			slack.AttachmentAction{
+				Name:       "Users",
+				Type:       "select",
+				DataSource: "users",
+			},
+		},
 	}
 
 	params.Attachments = []slack.Attachment{attachment}
