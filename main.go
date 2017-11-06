@@ -31,8 +31,10 @@ func KioskbotAuth() gin.HandlerFunc {
 }
 
 func main() {
-	gocron.Every(10).Seconds().Do(KioskbotLib.Email)
-	<-gocron.Start()
+	go func() {
+		gocron.Every(10).Seconds().Do(KioskbotLib.Email)
+		<-gocron.Start()
+	}()
 
 	router := gin.New()
 
