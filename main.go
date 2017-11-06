@@ -1,13 +1,14 @@
 package main
 
 import (
+	"fmt"
 	KioskbotLib "kioskbot-services/lib"
 	"net/http"
 	"os"
 
 	"github.com/gin-gonic/gin"
-	"github.com/jasonlvhit/gocron"
 	_ "github.com/joho/godotenv"
+	"github.com/robfig/cron"
 )
 
 func KioskbotAuth() gin.HandlerFunc {
@@ -31,10 +32,13 @@ func KioskbotAuth() gin.HandlerFunc {
 }
 
 func main() {
-	go func() {
-		gocron.Every(10).Seconds().Do(KioskbotLib.Email)
-		<-gocron.Start()
-	}()
+	// starting the cronjob
+	c := cron.New()
+	c.AddFunc("@every 1m", func() {
+		fmt.Println("Running Email Cron...")
+		KioskbotLib.Email()
+	})
+	c.Start()
 
 	router := gin.New()
 
