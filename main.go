@@ -1,17 +1,13 @@
 package main
 
 import (
-	"encoding/json"
 	KioskbotLib "kioskbot-services/lib"
-	KioskTypes "kioskbot-services/types"
 	"net/http"
-	"net/url"
 	"os"
-	"strings"
 
 	"github.com/gin-gonic/gin"
+	"github.com/jasonlvhit/gocron"
 	_ "github.com/joho/godotenv"
-	"github.com/nlopes/slack"
 )
 
 func KioskbotAuth() gin.HandlerFunc {
@@ -35,6 +31,9 @@ func KioskbotAuth() gin.HandlerFunc {
 }
 
 func main() {
+	gocron.Every(10).Seconds().Do(KioskbotLib.Email)
+	<-gocron.Start()
+
 	router := gin.New()
 
 	// Middlewares
@@ -51,7 +50,6 @@ func main() {
 		})
 
 		v1.GET("/slack-request", func(c *gin.Context) {
-			KioskbotLib.Notify()
 			c.String(http.StatusOK, "ok")
 		})
 
@@ -60,45 +58,6 @@ func main() {
 			c.JSON(200, map[string]interface{}{"endpoints": endpoints})
 		})
 	}
-
-	router.POST("/api/v1/slack-response", func(c *gin.Context) {
-		var jsonPayload slack.AttachmentActionCallback
-		formPayload := c.PostForm("payload")
-
-		// payload comes wrapped in ""
-		formPayload = strings.TrimSuffix(formPayload, "\"")
-
-		// string is still url encoded
-		formPayload, err := url.QueryUnescape(formPayload)
-		if err != nil {
-			panic(err)
-		}
-
-		bytes := []byte(formPayload)
-		err = json.Unmarshal(bytes, &jsonPayload)
-		if err != nil {
-			panic(err)
-		}
-
-		// as soon as we have the serialized json, check if its an authorized one
-		if jsonPayload.Token != os.Getenv("SLACK_APP_TOKEN") {
-			c.JSON(400, map[string]string{"error": "invald slack app token"})
-			return
-		}
-
-		callbackParts := strings.Split(jsonPayload.CallbackID, "?")
-		callbackID := callbackParts[0]
-		callbackQueryValues, _ := url.ParseQuery(callbackParts[1])
-
-		if callbackID == "wire_user_selection" {
-			KioskbotLib.SendPayment(KioskTypes.Payment{
-				User:   jsonPayload.Actions[0].SelectedOptions[0].Value,
-				Amount: callbackQueryValues["amount"][0],
-			})
-		}
-
-		c.JSON(200, jsonPayload)
-	})
 
 	router.GET("/", func(c *gin.Context) {
 		c.String(200, "Nothing to see here.")
