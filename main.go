@@ -35,6 +35,7 @@ func KioskbotAuth() gin.HandlerFunc {
 }
 
 func main() {
+	KioskbotLib.Email()
 	router := gin.New()
 
 	// Middlewares
@@ -51,7 +52,6 @@ func main() {
 		})
 
 		v1.GET("/slack-request", func(c *gin.Context) {
-			KioskbotLib.Notify()
 			c.String(http.StatusOK, "ok")
 		})
 
