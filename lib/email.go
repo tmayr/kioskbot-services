@@ -75,7 +75,7 @@ func Email() {
 		Password: os.Getenv("KB_EMAIL_PASSWORD"),
 		TLS:      true,
 		Timeout:  60 * time.Second,
-		MarkSeen: false,
+		MarkSeen: true,
 	})
 	if err != nil {
 		panic(err)
