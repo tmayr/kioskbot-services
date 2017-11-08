@@ -33,6 +33,12 @@
 			"revisionTime": "2017-10-02T20:02:53Z"
 		},
 		{
+			"checksumSHA1": "6pwrbIx6xPzzoEYyUt4A8fNnlFE=",
+			"path": "github.com/emersion/go-imap",
+			"revision": "0109e79db691ad6f173063541188440234114a8d",
+			"revisionTime": "2017-08-21T15:36:52Z"
+		},
+		{
 			"checksumSHA1": "wde0qFifzqtykahBv4lV4DugBv0=",
 			"path": "github.com/emersion/go-imap/commands",
 			"revision": "0109e79db691ad6f173063541188440234114a8d",
