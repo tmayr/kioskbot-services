@@ -2,7 +2,7 @@ FROM golang:alpine
 
 ENV PORT 3000
 
-RUN apk update && apk --no-cache add git
+RUN apk update && apk --no-cache add git curl
 RUN git clone https://github.com/tmayr/kioskbot-services /go/src/kioskbot-services
 RUN go get github.com/kardianos/govendor
 
