@@ -42,7 +42,7 @@ func main() {
 	})
 
 	// every weekday, every 5 minutes, from 4am to 23pm
-	c.AddFunc("0/5 4-23 * * 1-5", func() {
+	c.AddFunc("0 0/5 * * * 1-5", func() {
 		http.Get(os.Getenv("APP_URL") + "/heartbeat")
 	})
 	c.Start()
