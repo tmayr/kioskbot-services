@@ -34,9 +34,16 @@ func KioskbotAuth() gin.HandlerFunc {
 func main() {
 	// starting the cronjob
 	c := cron.New()
+
+	// check for emails every minute
 	c.AddFunc("@every 1m", func() {
 		fmt.Println("Running Email Cron...")
 		KioskbotLib.Email()
+	})
+
+	// every weekday, every 10 minutes, from 4am to 23pm
+	c.AddFunc("0/10 4-23 * * 1-5", func() {
+		http.Get(os.Getenv("APP_URL"))
 	})
 	c.Start()
 
@@ -67,6 +74,10 @@ func main() {
 
 	router.GET("/", func(c *gin.Context) {
 		c.String(200, "Nothing to see here.")
+	})
+
+	router.GET("/heartbeat", func(c *gin.Context) {
+		c.JSON(200, map[string]interface{}{"status": "ok i guess"}))
 	})
 
 	router.Run()
