@@ -51,7 +51,7 @@ func matchBancoBCI(body string) KioskbotTypes.BankWire {
 func matchBancoSantander(body string) KioskbotTypes.BankWire {
 	matches := KioskbotTypes.BankWire{
 		Amount: getAmount(`Monto[\s\n]+de la operación[\s\n]+[\:\$\s]+([\d\.]+)`, body),
-		Name:   getName(`Le informamos que hoy, 30 de Octubre de 2017, nuestro\(a\) cliente[\s\n]+(.+) ha instruído`, body),
+		Name:   getName(`Le informamos que hoy, .+, nuestro\(a\) cliente[\s\n]+(.+) ha instruído`, body),
 		Bank:   "Banco Santander",
 	}
 
