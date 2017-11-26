@@ -62,13 +62,14 @@ func main() {
 			c.JSON(http.StatusOK, kioskitems)
 		})
 
-		v1.GET("/slack-request", func(c *gin.Context) {
-			c.String(http.StatusOK, "ok")
+		v1.GET("/check-email", func(c *gin.Context) {
+			KioskbotLib.Email()
+			c.JSON(http.StatusOK, map[string]interface{}{"message": "checking email"})
 		})
 
 		v1.GET("/", func(c *gin.Context) {
 			endpoints := []string{"/api/v1/update-algolia"}
-			c.JSON(200, map[string]interface{}{"endpoints": endpoints})
+			c.JSON(http.StatusOK, map[string]interface{}{"endpoints": endpoints})
 		})
 	}
 
