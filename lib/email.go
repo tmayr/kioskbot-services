@@ -12,12 +12,6 @@ import (
 	imapreader "github.com/erizocosmico/go-imapreader"
 )
 
-// var wireProriders map[string]string {
-// 	"serviciodetransferencias@bancochile.cl": "Banco Chile",
-// 	"mensajes@santander.cl": "Banco Santander",
-// 	"transferencias@bci.cl": "Banco BCI",
-// }
-
 func getAmount(matchExpression string, body string) string {
 	r, _ := regexp.Compile(matchExpression)
 	amountMatched := r.FindStringSubmatch(body)
@@ -36,6 +30,16 @@ func getName(matchExpression string, body string) string {
 	}
 
 	return ""
+}
+
+func matchScotiabank(body string) KioskbotTypes.BankWire {
+	matches := KioskbotTypes.BankWire{
+		Amount: getAmount(`por un monto de \$([\d\.]+)`, body),
+		Name:   getName(`Sr\(a\) (.+) ha instruido`, body),
+		Bank:   "Scotiabank",
+	}
+
+	return matches
 }
 
 func matchBancoBCI(body string) KioskbotTypes.BankWire {
@@ -116,8 +120,10 @@ func Email() {
 			wire = matchBancoSantander(doc.Text())
 		case "transferencias@bci.cl":
 			wire = matchBancoBCI(doc.Text())
+		case "informaciones@scotiabank.cl":
+			wire = matchScotiabank(doc.Text())
 		default:
-			log.Printf("We couldnt find how to parse a wire from " + from)
+			log.Printf("We couldnt find how to parse an email " + from)
 			continue
 		}
 
