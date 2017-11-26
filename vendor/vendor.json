@@ -255,5 +255,9 @@
 			"revisionTime": "2017-08-12T16:00:11Z"
 		}
 	],
-	"rootPath": "kioskbot-services"
+	"rootPath": "kioskbot-services",
+	"heroku": {
+		"goVersion": "go1.9.2",
+		"sync": false
+	}
 }
